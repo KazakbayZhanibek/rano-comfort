@@ -1,0 +1,312 @@
+/* ─── Мобильная адаптация админки (от 400px) ─── */
+
+@media (max-width: 767px) {
+  /* ── Основной контейнер ── */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* ── Сайдбар ── */
+  .admin-sidebar {
+    position: fixed !important;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 99;
+    box-shadow: var(--shadow-md);
+    width: 100% !important;
+    max-width: 280px;
+  }
+
+  .admin-sidebar.closed {
+    transform: translateX(-100%);
+  }
+
+  .admin-sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* ── Мобильная кнопка меню ── */
+  .mobile-menu-btn {
+    display: block !important;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 101;
+    padding: 0.5rem 1rem !important;
+    font-size: 1rem !important;
+  }
+
+  /* ── Контент с отступом для кнопки ── */
+  main {
+    padding-top: 3.5rem !important;
+    margin-left: 0 !important;
+  }
+
+  /* ── Таблицы - преобразование в мобильный вид ── */
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    width: 100% !important;
+    font-size: 0.8rem !important;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tbody tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    background: #fff;
+  }
+
+  tbody td {
+    display: block;
+    padding: 0.5rem 0 !important;
+    text-align: left;
+    border: none;
+    position: relative;
+    padding-left: 40% !important;
+  }
+
+  tbody td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0.5rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    min-width: 35%;
+  }
+
+  /* ── Сетка статистики ── */
+  .stats-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  /* ── Карточки ── */
+  .card {
+    padding: 1rem !important;
+  }
+
+  /* ── Заголовки ── */
+  h1 {
+    font-size: 1.25rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  h2 {
+    font-size: 1rem !important;
+  }
+
+  /* ── Кнопки и ссылки ── */
+  button, a.btn, a[href*="/admin"] {
+    font-size: 0.8rem !important;
+    padding: 0.5rem 1rem !important;
+  }
+
+  .btn-primary, .btn-secondary {
+    width: 100%;
+  }
+
+  /* ── Гибкое выравнивание ── */
+  .flex {
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+
+  .flex-between {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+
+  /* ── Формы ── */
+  input, select, textarea {
+    font-size: 16px !important; /* Предотвращает зум при фокусе */
+    width: 100% !important;
+  }
+
+  .form-group {
+    margin-bottom: 1rem !important;
+  }
+
+  /* ── Переполнение текста ── */
+  td {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Экраны 600px и меньше */
+  .mobile-menu-btn {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.9rem !important;
+    top: 0.75rem !important;
+    left: 0.75rem !important;
+  }
+
+  main {
+    padding: 3.5rem 0.75rem 0.75rem !important;
+  }
+
+  h1 {
+    font-size: 1.1rem !important;
+  }
+
+  table {
+    font-size: 0.75rem !important;
+  }
+
+  tbody td {
+    padding-left: 35% !important;
+  }
+
+  tbody td::before {
+    font-size: 0.7rem !important;
+  }
+
+  button {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.75rem !important;
+    width: 100%;
+  }
+
+  .btn-sm {
+    padding: 0.4rem 0.75rem !important;
+    font-size: 0.7rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Очень маленькие экраны */
+  .admin-sidebar {
+    width: 85vw !important;
+    max-width: 85vw;
+  }
+
+  main {
+    padding: 3.5rem 0.5rem 0.5rem !important;
+  }
+
+  .mobile-menu-btn {
+    padding: 0.4rem 0.6rem !important;
+    font-size: 0.85rem !important;
+  }
+
+  h1 {
+    font-size: 1rem !important;
+  }
+
+  table {
+    font-size: 0.7rem !important;
+  }
+
+  tbody tr {
+    padding: 0.75rem !important;
+    margin-bottom: 0.75rem;
+  }
+
+  tbody td {
+    padding: 0.4rem 0 !important;
+    padding-left: 32% !important;
+    font-size: 0.7rem !important;
+  }
+
+  tbody td::before {
+    font-size: 0.65rem !important;
+    min-width: 30%;
+  }
+
+  button, a {
+    padding: 0.4rem 0.6rem !important;
+    font-size: 0.7rem !important;
+  }
+
+  .stats-grid {
+    gap: 0.75rem !important;
+  }
+
+  .card {
+    padding: 0.75rem !important;
+  }
+}
+
+@media (max-width: 400px) {
+  /* Минимальные экраны */
+  .admin-sidebar {
+    width: 90vw !important;
+  }
+
+  main {
+    padding: 3.25rem 0.5rem 0.5rem !important;
+  }
+
+  .mobile-menu-btn {
+    padding: 0.4rem 0.5rem !important;
+    font-size: 0.8rem !important;
+    top: 0.5rem !important;
+    left: 0.5rem !important;
+  }
+
+  h1 {
+    font-size: 0.95rem !important;
+  }
+
+  table {
+    font-size: 0.65rem !important;
+  }
+
+  tbody tr {
+    padding: 0.5rem !important;
+    margin-bottom: 0.5rem;
+    border-radius: var(--radius-sm);
+  }
+
+  tbody td {
+    padding: 0.3rem 0 !important;
+    padding-left: 28% !important;
+    font-size: 0.65rem !important;
+  }
+
+  tbody td::before {
+    font-size: 0.6rem !important;
+    min-width: 25%;
+  }
+
+  button, a {
+    padding: 0.35rem 0.5rem !important;
+    font-size: 0.65rem !important;
+  }
+
+  input, select {
+    padding: 0.5rem !important;
+    font-size: 14px !important;
+  }
+
+  .stats-grid {
+    gap: 0.5rem !important;
+  }
+
+  .card {
+    padding: 0.5rem !important;
+  }
+
+  /* Скрыть некритичные колонки */
+  tbody td:nth-child(n+5) {
+    display: none;
+  }
+}
+
