@@ -45,10 +45,39 @@ export default function RegisterPage() {
 
     setLoading(true)
     try {
-      // TODO: заменить на реальный API /api/auth/register
-      await new Promise(r => setTimeout(r, 1200))
-      router.push('/profile')
-    } catch {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          password: form.password,
+        }),
+      })
+
+      if (!res.ok) {
+        const error = await res.json()
+        setError(error.error || 'Ошибка регистрации')
+        return
+      }
+
+      // После успешной регистрации попытаемся войти
+      const signInResult = await fetch('/api/auth/callback/credentials', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+        }),
+      })
+
+      if (signInResult.ok) {
+        router.push('/profile')
+      } else {
+        router.push('/auth/login')
+      }
+    } catch (err) {
       setError('Ошибка регистрации. Попробуйте снова.')
     } finally {
       setLoading(false)

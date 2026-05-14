@@ -4,6 +4,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { signIn } from 'next-auth/react'
 import { EyeIcon, EyeSlashIcon, EnvelopeIcon, LockClosedIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
 export default function LoginPage() {
@@ -24,11 +25,21 @@ export default function LoginPage() {
 
     setLoading(true)
     try {
-      // TODO: заменить на реальный NextAuth signIn
-      await new Promise(r => setTimeout(r, 1000))
+      const result = await signIn('credentials', {
+        email: form.email,
+        password: form.password,
+        redirect: false,
+      })
+      
+      if (result?.error) {
+        setError('Неверный email или пароль')
+        setLoading(false)
+        return
+      }
+      
       router.push('/profile')
-    } catch {
-      setError('Неверный email или пароль')
+    } catch (err) {
+      setError('Ошибка при входе. Попробуйте снова.')
     } finally {
       setLoading(false)
     }

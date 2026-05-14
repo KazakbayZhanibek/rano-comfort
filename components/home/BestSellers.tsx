@@ -38,12 +38,20 @@ export default function BestSellers() {
   const [loading,  setLoading]  = useState(true)
 
   useEffect(() => {
-    /* TODO: заменить на реальный fetch('/api/products?bestseller=true') */
-    const timer = setTimeout(() => {
-      setProducts(MOCK_PRODUCTS)
-      setLoading(false)
-    }, 600)
-    return () => clearTimeout(timer)
+    async function fetchProducts() {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products?bestseller=true`)
+        if (!response.ok) throw new Error('Failed to fetch products')
+        const data = await response.json()
+        setProducts(Array.isArray(data) ? data : data.products || MOCK_PRODUCTS)
+      } catch (error) {
+        console.error('Error fetching best sellers:', error)
+        setProducts(MOCK_PRODUCTS)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchProducts()
   }, [])
 
   return (

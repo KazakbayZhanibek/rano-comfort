@@ -4,7 +4,7 @@ import { WorkingHours } from '@/components/contacts/WorkingHours'
 
 export const metadata = {
   title: 'Контакты',
-  description: 'Свяжитесь с RANO Comfort Service. Телефон, адрес, WhatsApp, Telegram.',,
+  description: 'Свяжитесь с RANO Comfort Service. Телефон, адрес, WhatsApp, Telegram.',
 }
 
 export default function ContactsPage() {

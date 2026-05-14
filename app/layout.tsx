@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   keywords: ['бытовая химия', 'Алматы', 'доставка', 'эко', 'RANO', 'средства уборки', 'стирка', 'посуда'],
   authors: [{ name: 'RANO Comfort Service' }],
   creator: 'RANO Comfort Service',
-  metadataBase: new URL('http://localhost:3000'),
+  metadataBase: new URL(process.env.NEXTAUTH_URL || 'http://localhost:3000'),
   icons: {
     icon: '/icon.png',
     apple: '/apple-icon.png',

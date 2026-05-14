@@ -1,6 +1,7 @@
 // middleware.ts
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { validateAdminSession } from '@/lib/admin-auth'
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -17,9 +18,13 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/admin/login', request.url))
     }
 
-    // Проверяем сессию на сервере (для этого нам нужна функция)
-    // Пока просто проверяем наличие токена
-    // TODO: Добавить проверку валидности сессии через API call
+    // Проверяем валидность сессии
+    const isValid = await validateAdminSession(sessionToken)
+    if (!isValid) {
+      const res = NextResponse.redirect(new URL('/admin/login', request.url))
+      res.cookies.delete('admin_session')
+      return res
+    }
   }
 
   return NextResponse.next()
