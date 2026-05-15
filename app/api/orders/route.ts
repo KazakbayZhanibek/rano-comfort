@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 // app/api/orders/route.ts
 import { NextResponse, NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'

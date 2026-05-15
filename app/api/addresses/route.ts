@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
-const prisma = new PrismaClient()
+import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
 
 // GET /api/addresses - Получить все адреса пользователя
 export async function GET(request: NextRequest) {
