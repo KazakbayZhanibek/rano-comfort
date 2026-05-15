@@ -1,38 +1,39 @@
-import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
-
 export const dynamic = 'force-dynamic'
-export const revalidate = 0
+
+import { NextResponse } from 'next/server'
 
 export async function GET() {
-  const orders = await prisma.order.findMany({
-    orderBy: { createdAt: 'desc' },
-  })
+  try {
+    const { prisma } = await import('@/lib/prisma')
 
-  // Формируем CSV
-  const header = ['ID', 'Клиент', 'Телефон', 'Адрес', 'Доставка', 'Оплата', 'Сумма', 'Статус', 'Дата']
-  const rows = orders.map(o => [
-    o.id,
-    o.name,
-    o.phone,
-    o.address ?? '',
-    o.delivery ?? '',
-    o.payment ?? '',
-    Number(o.total),
-    o.status,
-    new Date(o.createdAt).toLocaleDateString('ru-RU'),
-  ])
+    const orders = await prisma.order.findMany({
+      orderBy: { createdAt: 'desc' },
+    })
 
-  const csv = [header, ...rows]
-    .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
-    .join('\n')
+    const header = ['ID', 'Клиент', 'Телефон', 'Адрес', 'Доставка', 'Оплата', 'Сумма', 'Статус', 'Дата']
+    const rows = orders.map((o: any) => [
+      o.id, o.name, o.phone,
+      o.address ?? '',
+      o.delivery ?? '',
+      o.payment ?? '',
+      Number(o.total),
+      o.status,
+      new Date(o.createdAt).toLocaleDateString('ru-RU'),
+    ])
 
-  const BOM = '\uFEFF' // для корректного отображения кириллицы в Excel
+    const csv = [header, ...rows]
+      .map(row => row.map((cell: any) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+      .join('\n')
 
-  return new NextResponse(BOM + csv, {
-    headers: {
-      'Content-Type': 'text/csv; charset=utf-8',
-      'Content-Disposition': `attachment; filename="orders_${new Date().toISOString().slice(0, 10)}.csv"`,
-    },
-  })
+    const BOM = '\uFEFF'
+
+    return new NextResponse(BOM + csv, {
+      headers: {
+        'Content-Type': 'text/csv; charset=utf-8',
+        'Content-Disposition': `attachment; filename="orders_${new Date().toISOString().slice(0, 10)}.csv"`,
+      },
+    })
+  } catch (error) {
+    return new NextResponse('Error', { status: 500 })
+  }
 }
