@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { notifyClient } from '@/lib/telegram'
 
 export async function GET(
   _: Request,
@@ -33,5 +34,13 @@ export async function PATCH(
     where: { id: Number(params.id) },
     data:  { status },
   })
+
+  // Отправляем уведомление клиенту в Telegram если у него есть chat_id
+  if (order.telegramChatId) {
+    notifyClient(order.telegramChatId, order.id, status).catch(err => {
+      console.error('Failed to notify client:', err.message)
+    })
+  }
+
   return NextResponse.json(order)
 }

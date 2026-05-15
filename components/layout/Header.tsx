@@ -57,7 +57,7 @@ export default function Header() {
             {/* Логотип */}
             <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0, textDecoration: 'none' }}>
               <Image
-                src="/logo.png"
+                src="/icon.png"
                 alt="RANO Logo"
                 width={56}
                 height={56}

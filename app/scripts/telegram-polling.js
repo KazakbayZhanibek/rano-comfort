@@ -2,11 +2,15 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 // Бот для тебя (заказы + управление статусами)
-const ADMIN_TOKEN   = '8667900421:AAFEKBFrLz_m518-0Kw2LS-d2MCPxtgiXho'
-const ADMIN_CHAT_ID = '6295192258'
+const ADMIN_TOKEN = process.env.TELEGRAM_BOT_TOKEN
+if (!ADMIN_TOKEN) throw new Error('TELEGRAM_BOT_TOKEN не задан')
+
+const ADMIN_CHAT_ID = process.env.TELEGRAM_CHAT_ID
+if (!ADMIN_CHAT_ID) throw new Error('TELEGRAM_CHAT_ID не задан')
 
 // Бот для клиентов (уведомления)
-const CLIENT_TOKEN  = '8275159016:AAFEuZr3RBJjoqyrpKZz-OrpapX9eqLQxRU'
+const CLIENT_TOKEN = process.env.TELEGRAM_CLIENT_BOT_TOKEN
+if (!CLIENT_TOKEN) throw new Error('TELEGRAM_CLIENT_BOT_TOKEN не задан')
 
 const ADMIN_API  = `https://api.telegram.org/bot${ADMIN_TOKEN}`
 const CLIENT_API = `https://api.telegram.org/bot${CLIENT_TOKEN}`

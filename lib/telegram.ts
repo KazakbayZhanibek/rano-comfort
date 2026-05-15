@@ -120,11 +120,17 @@ export async function editMessageText(chatId: string, messageId: number, text: s
 }
 
 export async function notifyClient(telegramChatId: string, orderId: number, status: string) {
+  console.log(`[notifyClient] Вызвана функция с параметрами:`, { telegramChatId, orderId, status })
+  
   const clientToken = process.env.TELEGRAM_CLIENT_BOT_TOKEN
+  console.log(`[notifyClient] TELEGRAM_CLIENT_BOT_TOKEN = ${clientToken ? '✓ загружен' : '✗ не найден'}`)
+  
   if (!clientToken) {
-    console.warn('TELEGRAM_CLIENT_BOT_TOKEN not configured')
+    console.error('❌ TELEGRAM_CLIENT_BOT_TOKEN not configured')
     return
   }
+
+  console.log(`📱 Отправляем уведомление клиенту: chat_id=${telegramChatId}, orderId=${orderId}, status=${status}`)
 
   const STATUS_LABELS: Record<string, string> = {
     new:       '🛒 Новый',
@@ -156,7 +162,9 @@ export async function notifyClient(telegramChatId: string, orderId: number, stat
     })
     if (!res.ok) {
       const err = await res.json()
-      console.error('Telegram notification error:', err)
+      console.error('🔴 Telegram notification error:', err)
+    } else {
+      console.log('✅ Уведомление отправлено успешно')
     }
   } catch (error) {
     console.error('Failed to send telegram notification:', error)

@@ -3,7 +3,10 @@ import Link from 'next/link'
 import AdminHeader from '@/components/admin/AdminHeader'
 import AdminCharts from '@/components/admin/AdminCharts'
 
+export const dynamic = 'force-dynamic'
+
 export default async function AdminDashboard() {
+  try {
   const now = new Date()
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
   const sevenDaysAgo  = new Date(now.getTime() - 7  * 24 * 60 * 60 * 1000)
@@ -295,4 +298,16 @@ export default async function AdminDashboard() {
       </div>
     </>
   )
+  } catch (error) {
+    console.error('Dashboard error:', error)
+    return (
+      <>
+        <AdminHeader />
+        <div style={{ padding: '2rem', textAlign: 'center' }}>
+          <h1>Ошибка загрузки панели</h1>
+          <p>{String(error)}</p>
+        </div>
+      </>
+    )
+  }
 }

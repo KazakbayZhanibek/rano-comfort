@@ -14,16 +14,21 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
+    console.log(`[PATCH /api/admin/orders/${params.id}] Запрос получен`)
+    
     // Проверяем админ-сессию
     const token = getAdminToken(request)
     if (!token || !(await validateAdminSession(token))) {
+      console.error(`[PATCH /api/admin/orders/${params.id}] ❌ Unauthorized`)
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const body = await request.json()
     const { status } = body
+    console.log(`[PATCH /api/admin/orders/${params.id}] Новый статус: ${status}`)
 
     if (!status) {
+      console.error(`[PATCH /api/admin/orders/${params.id}] ❌ Status не задан`)
       return NextResponse.json({ error: 'Status is required' }, { status: 400 })
     }
 
@@ -34,20 +39,25 @@ export async function PATCH(
       where: { id: orderId },
       data: { status },
     })
+    
+    console.log(`[PATCH /api/admin/orders/${params.id}] ✓ Заказ обновлён в БД`)
+    console.log(`[PATCH /api/admin/orders/${params.id}] telegramChatId = ${order.telegramChatId}`)
 
     // Отправляем уведомление клиенту в Telegram
     if (order.telegramChatId) {
+      console.log(`[PATCH /api/admin/orders/${params.id}] 📱 Вызываем notifyClient...`)
       try {
         await notifyClient(order.telegramChatId, orderId, status)
       } catch (err) {
-        console.error('Failed to send telegram notification:', err)
-        // Не прерываем если уведомление не отправилось
+        console.error(`[PATCH /api/admin/orders/${params.id}] ❌ notifyClient error:`, err)
       }
+    } else {
+      console.warn(`[PATCH /api/admin/orders/${params.id}] ⚠️ telegramChatId отсутствует`)
     }
 
     return NextResponse.json({ success: true, order })
   } catch (error) {
-    console.error('Order update error:', error)
+    console.error(`[PATCH /api/admin/orders/${params.id}] Order update error:`, error)
     return NextResponse.json({ error: 'Failed to update order' }, { status: 500 })
   }
 }

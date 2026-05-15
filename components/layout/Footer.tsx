@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
@@ -32,13 +33,14 @@ export default function Footer() {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '1rem' }}>
               <div style={{
-                width: 40, height: 40, borderRadius: '50%',
-                background: 'rgba(255,255,255,0.15)',
+                width: 48, height: 48, borderRadius: '50%',
+                overflow: 'hidden', background: 'rgba(255,255,255,0.15)',
                 border: '2px solid rgba(255,255,255,0.3)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontFamily: 'var(--font-heading)', fontWeight: 800,
-                fontSize: '1.1rem', color: '#fff', flexShrink: 0,
-              }}>R</div>
+                flexShrink: 0,
+              }}>
+                <Image src="/icon.png" alt="RANO Logo" width={48} height={48} />
+              </div>
               <div>
                 <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.1rem', color: '#fff' }}>
                   RANO Comfort

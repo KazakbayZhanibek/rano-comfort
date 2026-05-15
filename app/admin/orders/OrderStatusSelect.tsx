@@ -5,7 +5,7 @@ import { useState } from 'react'
 const statuses = [
   { value: 'new',       label: 'Новый'     },
   { value: 'confirmed', label: 'Принят'    },
-  { value: 'shipping',  label: 'В пути'    },
+  { value: 'shipped',   label: 'В пути'    },
   { value: 'delivered', label: 'Доставлен' },
   { value: 'cancelled', label: 'Отменён'   },
 ]
@@ -32,13 +32,20 @@ export default function OrderStatusSelect({
 
   async function handleChange(newStatus: string) {
     setSaving(true)
+    console.log(`🔄 Изменение статуса с ${status} на ${newStatus} для заказа #${orderId}`)
+    
     try {
-      const res = await fetch(`/api/admin/orders/${orderId}`, {
+      const url = `/api/admin/orders/${orderId}`
+      console.log(`📤 Отправляем PATCH запрос на ${url}`)
+      
+      const res = await fetch(url, {
         method: 'PATCH',
         credentials: 'include', // Отправляем cookies
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
       })
+      
+      console.log(`📥 Ответ: ${res.status} ${res.statusText}`)
       
       if (!res.ok) {
         if (res.status === 401) {
@@ -52,6 +59,7 @@ export default function OrderStatusSelect({
       }
 
       setStatus(newStatus)
+      console.log(`✅ Статус обновлён на ${newStatus}`)
     } catch (err) {
       console.error('Error updating order status:', err)
     } finally {

@@ -34,8 +34,20 @@ export default function RegisterPage() {
       setError('Пароли не совпадают')
       return
     }
-    if (form.password.length < 6) {
-      setError('Пароль должен быть не менее 6 символов')
+    if (form.password.length < 8) {
+      setError('Пароль должен быть минимум 8 символов')
+      return
+    }
+    if (!/[A-Z]/.test(form.password)) {
+      setError('Пароль должен содержать заглавную букву')
+      return
+    }
+    if (!/[a-z]/.test(form.password)) {
+      setError('Пароль должен содержать строчную букву')
+      return
+    }
+    if (!/[0-9]/.test(form.password)) {
+      setError('Пароль должен содержать цифру')
       return
     }
     if (!agree) {

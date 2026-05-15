@@ -1,58 +1,57 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { createAdminSession, logLoginAttempt, checkLoginRateLimit } from '@/lib/admin-auth'
 
-function getClientIp(request: NextRequest): string {
-  const forwardedFor = request.headers.get('x-forwarded-for')
-  const realIp = request.headers.get('x-real-ip')
-  return forwardedFor?.split(',')[0].trim() || realIp || 'unknown'
+// Простой rate limiter в памяти
+const attempts = new Map<string, { count: number; resetAt: number }>()
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now()
+  const record = attempts.get(ip)
+
+  if (!record || record.resetAt < now) {
+    attempts.set(ip, { count: 1, resetAt: now + 15 * 60 * 1000 })
+    return true
+  }
+
+  if (record.count >= 5) return false
+
+  record.count++
+  return true
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const { password } = await req.json()
-    const clientIp = getClientIp(req)
+    const ip = req.headers.get('x-forwarded-for') || 'unknown'
 
-    // Проверяем rate limit
-    const isAllowed = await checkLoginRateLimit(clientIp)
-    if (!isAllowed) {
-      await logLoginAttempt(clientIp, false)
+    if (!checkRateLimit(ip)) {
       return NextResponse.json(
-        { error: 'Слишком много неудачных попыток. Попробуйте позже.' },
+        { error: 'Слишком много попыток. Попробуйте через 15 минут.' },
         { status: 429 }
       )
     }
 
-    // Проверяем пароль
-    if (password !== process.env.ADMIN_SECRET) {
-      await logLoginAttempt(clientIp, false)
-      return NextResponse.json(
-        { error: 'Неверный пароль' },
-        { status: 401 }
-      )
+    const { password } = await req.json()
+
+    if (!password) {
+      return NextResponse.json({ error: 'Пароль не указан' }, { status: 400 })
     }
 
-    // Успешный вход - создаем сессию
-    const session = await createAdminSession()
-    await logLoginAttempt(clientIp, true)
+    if (password !== process.env.ADMIN_SECRET) {
+      return NextResponse.json({ error: 'Неверный пароль' }, { status: 401 })
+    }
 
     const res = NextResponse.json({ ok: true })
-
-    // Устанавливаем secure http-only cookie с session token
-    res.cookies.set('admin_session', session.token, {
+    res.cookies.set('admin_session', process.env.ADMIN_SECRET!, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      maxAge: 7 * 24 * 60 * 60, // 7 дней в секундах
+      maxAge: 7 * 24 * 60 * 60,
     })
 
     return res
   } catch (error) {
     console.error('Admin login error:', error)
-    return NextResponse.json(
-      { error: 'Ошибка сервера' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Ошибка сервера' }, { status: 500 })
   }
 }

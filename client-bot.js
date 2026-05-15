@@ -1,15 +1,8 @@
-require('dotenv').config({ path: '.env.local' })
-
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
-const TOKEN   = process.env.TELEGRAM_CLIENT_BOT_TOKEN
+const TOKEN   = '8684036663:AAFJpm-pOi5jkYl8EfQ5YjrDz_-CUjCAZmI'
 const API_URL = `https://api.telegram.org/bot${TOKEN}`
-
-if (!TOKEN) {
-  console.error('❌ TELEGRAM_CLIENT_BOT_TOKEN не задан в .env.local')
-  process.exit(1)
-}
 
 const STATUS_LABELS = {
   new:       'Новый — ожидает подтверждения',
@@ -60,18 +53,13 @@ async function handleStart(chatId, text, firstName) {
     const label = STATUS_LABELS[order.status] || order.status
 
     await sendMessage(chatId,
-      `✨ *Спасибо за заказ!*\n\n` +
-      `━━━━━━━━━━━━━━━━━\n` +
-      `📦 Заказ *#${orderId}*\n` +
-      `━━━━━━━━━━━━━━━━━\n\n` +
-      `👤 Клиент: ${order.name}\n` +
-      `📞 Телефон: ${order.phone}\n` +
-      `💰 Сумма: ${Number(order.total).toLocaleString('ru-RU')} ₸\n\n` +
-      `🔔 *Статус заказа:*\n` +
-      `${label}\n\n` +
-      `━━━━━━━━━━━━━━━━━\n\n` +
-      `Вы будете получать уведомления об изменениях.\n` +
-      `Спасибо за покупку! 🙏`
+      `*Вы подписались на уведомления!*\n\n` +
+      `Заказ #${orderId}\n` +
+      `Клиент: ${order.name}\n` +
+      `Телефон: ${order.phone}\n` +
+      `Сумма: ${Number(order.total).toLocaleString('ru-RU')} тенге\n\n` +
+      `Текущий статус: ${label}\n\n` +
+      `Буду присылать уведомления при изменении статуса.`
     )
 
     console.log(`Клиент ${chatId} подписался на заказ #${orderId}`)

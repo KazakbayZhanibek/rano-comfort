@@ -1,13 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 
 export default function AdminLogin() {
   const [password, setPassword] = useState('')
   const [error, setError]       = useState('')
   const [loading, setLoading]   = useState(false)
-  const router = useRouter()
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -21,7 +19,7 @@ export default function AdminLogin() {
     })
 
     if (res.ok) {
-      router.push('/admin')
+      window.location.href = '/admin'
     } else {
       const data = await res.json()
       setError(data.error || 'Неверный пароль')
@@ -84,12 +82,12 @@ export default function AdminLogin() {
               required
               style={{
                 width: '100%', padding: 'clamp(0.625rem, 2vw, 0.75rem) clamp(0.75rem, 2vw, 1rem)',
-                border: `1.5px solid ${error ? '#EF4444' : 'var(--color-border)'}`,
+                border: `1.5px solid ${error ? '#EF4444' : '#E5E7EB'}`,
                 borderRadius: 'var(--radius-sm)',
                 fontSize: 'clamp(0.875rem, 2vw, 0.9375rem)',
                 fontFamily: 'var(--font-body)',
-                background: '#0F172A',
-                color: 'var(--color-text)',
+                background: '#FFFFFF',
+                color: '#1F2937',
                 outline: 'none',
                 boxSizing: 'border-box',
                 transition: 'all 0.2s ease',

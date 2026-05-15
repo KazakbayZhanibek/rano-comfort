@@ -194,7 +194,6 @@ export default function ProfilePage() {
       return
     }
 
-    // Простая валидация email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(emailForm.newEmail)) {
       setEmailError('Некорректный email')
@@ -217,10 +216,11 @@ export default function ProfilePage() {
         return
       }
 
-      toast.success('Email успешно изменён! Перезагрузи страницу.')
+      toast.success('Email успешно изменён!')
       setEmailForm({ newEmail: '' })
-      // Перезагружаем сессию
-      setTimeout(() => window.location.reload(), 1000)
+      
+      // Обновляем страницу через 1.5 сек — сессия подхватит новый email
+      setTimeout(() => window.location.reload(), 1500)
     } catch (error) {
       setEmailError('Ошибка при смене email')
     } finally {

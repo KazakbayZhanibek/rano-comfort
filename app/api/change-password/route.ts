@@ -1,11 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { rateLimit } from '@/lib/rateLimit'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import { headers } from 'next/headers'
 import bcrypt from 'bcryptjs'
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting
+    const headersList = headers()
+    const ip = headersList.get('x-forwarded-for') || 'unknown'
+    const limit = rateLimit(ip, 5, 15 * 60 * 1000) // 5 попыток за 15 минут
+
+    if (!limit.success) {
+      return NextResponse.json(
+        { error: 'Слишком много попыток. Попробуйте через 15 минут.' },
+        { status: 429 }
+      )
+    }
+
     const session = await getServerSession(authOptions)
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
