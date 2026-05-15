@@ -1,14 +1,12 @@
 export const dynamic = 'force-dynamic'
-export const revalidate = 0
 
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
 
-// GET /api/addresses - Получить все адреса пользователя
 export async function GET(request: NextRequest) {
   try {
+    const { prisma } = await import('@/lib/prisma')
     const userId = request.nextUrl.searchParams.get('userId')
-    
+
     if (!userId) {
       return NextResponse.json({ error: 'userId required' }, { status: 400 })
     }
@@ -25,9 +23,9 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/addresses - Создать новый адрес
 export async function POST(request: NextRequest) {
   try {
+    const { prisma } = await import('@/lib/prisma')
     const body = await request.json()
     const { userId, label, fullAddress, city, street, building, apartment, isDefault } = body
 
@@ -35,7 +33,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    // Если это адрес по умолчанию, отключить все остальные
     if (isDefault) {
       await prisma.address.updateMany({
         where: { userId: parseInt(userId) },
