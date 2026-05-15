@@ -62,8 +62,10 @@ export default async function AdminOrders() {
                   borderTop: '1px solid var(--color-border)',
                   background: i % 2 === 0 ? '#fff' : '#F8FAFC',
                 }}>
-                  <td style={{ padding: 'clamp(0.625rem, 1.5vw, 1rem) clamp(0.75rem, 1.5vw, 1.25rem)', fontWeight: 700, fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)', color: 'var(--color-text)' }}>
-                    #{order.id}
+                  <td style={{ padding: 'clamp(0.625rem, 1.5vw, 1rem) clamp(0.75rem, 1.5vw, 1.25rem)', fontWeight: 700, fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)' }}>
+                    <a href={`/admin/orders/${order.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'none' }}>
+                      #{order.id}
+                    </a>
                   </td>
                   <td style={{ padding: 'clamp(0.625rem, 1.5vw, 1rem) clamp(0.75rem, 1.5vw, 1.25rem)', fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)', fontWeight: 500, color: 'var(--color-text)' }}>
                     {order.name}
