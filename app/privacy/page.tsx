@@ -96,7 +96,7 @@ export default function PrivacyPage() {
           <p style={{ marginTop: '10px' }}>
             Email: <strong>privacy@rano-komfort.kz</strong><br />
             Телефон: <strong>+7 (777) 123-45-67</strong><br />
-            Адрес: <strong>Алматы, Казахстан</strong>
+            Адрес: <strong>Шымкент, Казахстан</strong>
           </p>
         </section>
 

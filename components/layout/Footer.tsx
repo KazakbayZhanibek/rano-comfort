@@ -51,7 +51,7 @@ export default function Footer() {
               </div>
             </div>
             <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.7, marginBottom: '1.5rem', maxWidth: 280 }}>
-              Экологичные, эффективные и доступные средства для уборки, стирки и ухода. Доставка по Алматы.
+              Экологичные, эффективные и доступные средства для уборки, стирки и ухода. Доставка по Шымкенту.
             </p>
             <div style={{ display: 'flex', gap: '0.75rem' }}>
               <a href="https://wa.me/77001234567" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"
@@ -157,7 +157,7 @@ export default function Footer() {
                     <circle cx="12" cy="10" r="3"/>
                   </svg>
                 </span>
-                <span style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.75)', lineHeight: 1.5 }}>Алматы, ул. Абая 123, офис 45</span>
+                <span style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.75)', lineHeight: 1.5 }}>Шымкент, ул. Абая 123, офис 45</span>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.625rem' }}>
@@ -188,7 +188,7 @@ export default function Footer() {
             © {year} RANO Comfort Service. Все права защищены.
           </p>
           <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.4)', margin: 0 }}>
-            Алматы, Казахстан • Доставка по городу
+            Шымкент, Казахстан • Доставка по городу
           </p>
         </div>
       </div>

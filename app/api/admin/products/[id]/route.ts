@@ -1,39 +1,29 @@
 export const dynamic = 'force-dynamic'
-export const revalidate = 0
 
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { validateAdminSession } from '@/lib/admin-auth'
+import { sendStockAlert } from '@/lib/stockAlert'
 
-// Функция для получения админ-сессии из cookies
-function getAdminToken(request: NextRequest): string | null {
-  return request.cookies.get('admin_session')?.value || null
+function isAdmin(request: NextRequest): boolean {
+  const token = request.cookies.get('admin_session')?.value
+  return token === process.env.ADMIN_SECRET
 }
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  try {
-    // Проверяем админ-сессию
-    const token = getAdminToken(request)
-    if (!token || !(await validateAdminSession(token))) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+  if (!isAdmin(request)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
+  try {
     const product = await prisma.product.findUnique({
       where: { id: parseInt(params.id) },
       include: { category: true },
     })
-
-    if (!product) {
-      return NextResponse.json({ error: 'Product not found' }, { status: 404 })
-    }
-
+    if (!product) return NextResponse.json({ error: 'Product not found' }, { status: 404 })
     return NextResponse.json(product)
   } catch (error) {
-    console.error('Product get error:', error)
     return NextResponse.json({ error: 'Failed to fetch product' }, { status: 500 })
   }
 }
@@ -42,13 +32,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  try {
-    // Проверяем админ-сессию
-    const token = getAdminToken(request)
-    if (!token || !(await validateAdminSession(token))) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+  if (!isAdmin(request)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
+  try {
     const body = await request.json()
     const { name, slug, description, price, oldPrice, volume, stock, images, isBestseller, isNew, isEco, categoryId } = body
 
@@ -68,9 +54,17 @@ export async function PUT(
       include: { category: true },
     })
 
+    if (product.stock <= 5) {
+      sendStockAlert({
+        id:       product.id,
+        name:     product.name,
+        stock:    product.stock,
+        category: product.category.name,
+      }).catch(console.error)
+    }
+
     return NextResponse.json(product)
   } catch (error) {
-    console.error('Product update error:', error)
     return NextResponse.json({ error: 'Failed to update product' }, { status: 500 })
   }
 }
@@ -79,86 +73,27 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  if (!isAdmin(request)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
   try {
-    // Проверяем админ-сессию
-    const token = getAdminToken(request)
-    if (!token || !(await validateAdminSession(token))) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
     const id = parseInt(params.id)
-    console.log(`[DELETE] Запрос на удаление товара ID: ${id}`)
+    if (isNaN(id) || id <= 0) return NextResponse.json({ error: 'Invalid product ID' }, { status: 400 })
 
-    if (isNaN(id) || id <= 0) {
-      return NextResponse.json({ error: 'Invalid product ID' }, { status: 400 })
-    }
+    const productExists = await prisma.product.findUnique({ where: { id }, select: { id: true, name: true } })
+    if (!productExists) return NextResponse.json({ error: 'Product not found' }, { status: 404 })
 
-    console.log(`[DELETE] Начинаем удаление товара ID: ${id}`)
+    await prisma.review.deleteMany({ where: { productId: id } })
+    await prisma.wishlist.deleteMany({ where: { productId: id } })
 
-    // Проверяем, существует ли товар
-    const productExists = await prisma.product.findUnique({
-      where: { id },
-      select: { id: true, name: true },
-    })
-
-    if (!productExists) {
-      console.log(`[DELETE] Товар ID: ${id} не найден`)
-      return NextResponse.json({ error: 'Product not found' }, { status: 404 })
-    }
-
-    console.log(`[DELETE] Найден товар: "${productExists.name}"`)
-
-    // Удаляем все связанные данные
-    console.log(`[DELETE] Удаляем отзывы для товара ${id}`)
-    const deletedReviews = await prisma.review.deleteMany({
-      where: { productId: id },
-    })
-    console.log(`[DELETE] Удалено отзывов: ${deletedReviews.count}`)
-
-    console.log(`[DELETE] Удаляем желания для товара ${id}`)
-    const deletedWishlist = await prisma.wishlist.deleteMany({
-      where: { productId: id },
-    })
-    console.log(`[DELETE] Удалено из вишлиста: ${deletedWishlist.count}`)
-
-    // Удаляем сам товар
-    console.log(`[DELETE] Удаляем сам товар ${id}`)
     const product = await prisma.product.delete({
       where: { id },
       select: { id: true, name: true, slug: true },
     })
 
-    console.log(`[DELETE] ✅ Товар успешно удалён:`, product)
-    
-    return NextResponse.json({
-      success: true,
-      message: `Товар "${product.name}" удалён`,
-      product,
-    })
+    return NextResponse.json({ success: true, message: `Товар "${product.name}" удалён`, product })
   } catch (error: any) {
-    console.error('[DELETE] ❌ Ошибка при удалении товара:', error)
-    
-    let errorMessage = 'Failed to delete product'
-    let errorCode = 'UNKNOWN'
-
-    if (error?.code === 'P2003') {
-      errorMessage = 'Невозможно удалить: товар связан с другими данными'
-      errorCode = 'FOREIGN_KEY_CONSTRAINT'
-    } else if (error?.code === 'P2025') {
-      errorMessage = 'Товар не найден'
-      errorCode = 'NOT_FOUND'
-    } else if (error?.message) {
-      errorMessage = error.message
-      errorCode = error.code || 'ERROR'
-    }
-
-    return NextResponse.json(
-      {
-        error: errorMessage,
-        code: errorCode,
-        details: process.env.NODE_ENV === 'development' ? error?.message : undefined,
-      },
-      { status: 500 }
-    )
+    if (error?.code === 'P2003') return NextResponse.json({ error: 'Товар связан с другими данными' }, { status: 500 })
+    if (error?.code === 'P2025') return NextResponse.json({ error: 'Товар не найден' }, { status: 404 })
+    return NextResponse.json({ error: 'Failed to delete product' }, { status: 500 })
   }
 }

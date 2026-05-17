@@ -7,6 +7,7 @@ const navItems = [
   { href: '/admin',           label: 'Дашборд'  },
   { href: '/admin/orders',    label: 'Заказы'   },
   { href: '/admin/products',  label: 'Товары'   },
+  { href: '/admin/contacts',  label: 'Сообщения' },
   { href: '/admin/promos',    label: 'Промокоды' },
 ]
 

@@ -126,8 +126,8 @@ async function main() {
           data: [
             {
               label: 'Дом',
-              fullAddress: 'Алматы, ул. Абая 123, кв. 45',
-              city: 'Алматы',
+              fullAddress: 'Шымкент, ул. Абая 123, кв. 45',
+              city: 'Шымкент',
               street: 'ул. Абая',
               building: '123',
               apartment: '45',
@@ -135,8 +135,8 @@ async function main() {
             },
             {
               label: 'Работа',
-              fullAddress: 'Алматы, пр. Аль-Фараби 77',
-              city: 'Алматы',
+              fullAddress: 'Шымкент, пр. Аль-Фараби 77',
+              city: 'Шымкент',
               street: 'пр. Аль-Фараби',
               building: '77',
               apartment: null,

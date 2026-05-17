@@ -19,7 +19,7 @@ const MOCK_USER = {
   name:   'Айгерим Сейткали',
   email:  'comfortservicetovar@gmail.com',
   phone:  '+7 (777) 123-45-67',
-  address: 'Алматы, ул. Абая 123, кв. 45',
+  address: 'Шымкент, ул. Абая 123, кв. 45',
   avatar: 'АС',
   joinDate: 'Март 2024',
 }

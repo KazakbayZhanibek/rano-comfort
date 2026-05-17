@@ -8,11 +8,11 @@ import SessionProviderWrapper from '@/components/SessionProviderWrapper'
 
 export const metadata: Metadata = {
   title: {
-    default: 'RANO Comfort Service — Бытовая химия в Алматы',
+    default: 'RANO Comfort Service — Бытовая химия в Шымкенте',
     template: '%s | RANO Comfort Service',
   },
-  description: 'Профессиональная бытовая химия с доставкой по Алматы. Экологичные средства для уборки, стирки и ухода. Прямо от производителя.',
-  keywords: ['бытовая химия', 'Алматы', 'доставка', 'эко', 'RANO', 'средства уборки', 'стирка', 'посуда'],
+  description: 'Профессиональная бытовая химия с доставкой по Шымкенту. Экологичные средства для уборки, стирки и ухода. Прямо от производителя.',
+  keywords: ['бытовая химия', 'Шымкент', 'доставка', 'эко', 'RANO', 'средства уборки', 'стирка', 'посуда'],
   authors: [{ name: 'RANO Comfort Service' }],
   creator: 'RANO Comfort Service',
   metadataBase: new URL(process.env.NEXTAUTH_URL || 'http://localhost:3000'),
@@ -22,8 +22,8 @@ export const metadata: Metadata = {
     shortcut: '/favicon.ico',
   },
   openGraph: {
-    title: 'RANO Comfort Service — Бытовая химия в Алматы',
-    description: 'Профессиональная бытовая химия с доставкой по Алматы.',
+    title: 'RANO Comfort Service — Бытовая химия в Шымкенте',
+    description: 'Профессиональная бытовая химия с доставкой по Шымкенту.',
     url: 'https://ranocomfort.kz',
     siteName: 'RANO Comfort Service',
     locale: 'ru_KZ',

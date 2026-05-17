@@ -105,7 +105,7 @@ export default function ProfilePage() {
   // Загружаем wishlist
   useEffect(() => {
     if (status === 'authenticated') {
-      fetch('/api/wishlist')
+      fetch('/api/wishlist', { credentials: 'include' })
         .then(r => r.json())
         .then(data => {
           if (Array.isArray(data)) setWishlist(data)
@@ -122,6 +122,7 @@ export default function ProfilePage() {
     fetch('/api/profile', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({
         name: form.name,
         phone: form.phone,
@@ -160,6 +161,7 @@ export default function ProfilePage() {
       const res = await fetch('/api/change-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({
           currentPassword: passwordForm.currentPassword,
           newPassword: passwordForm.newPassword,
@@ -206,6 +208,7 @@ export default function ProfilePage() {
       const res = await fetch('/api/profile/email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ newEmail: emailForm.newEmail }),
       })
 
@@ -434,6 +437,7 @@ export default function ProfilePage() {
                             await fetch('/api/wishlist', {
                               method: 'POST',
                               headers: { 'Content-Type': 'application/json' },
+                              credentials: 'include',
                               body: JSON.stringify({ productId: item.product.id }),
                             })
                             setWishlist(wishlist.filter(w => w.id !== item.id))

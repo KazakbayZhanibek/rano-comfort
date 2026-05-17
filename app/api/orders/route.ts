@@ -7,6 +7,7 @@ import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { sendTelegramNotification } from '@/lib/telegram'
 import { sendOrderNotification } from '@/lib/email'
+import { sendStockAlert } from '@/lib/stockAlert'
 
 export async function POST(request: Request) {
   try {
@@ -102,6 +103,28 @@ export async function POST(request: Request) {
         items:   JSON.parse(order.items),
       }).catch(console.error)
     }
+
+    // Проверяем остатки товаров после заказа
+    try {
+      const orderItems = typeof order.items === 'string' 
+        ? JSON.parse(order.items) 
+        : order.items
+
+      for (const item of orderItems) {
+        const product = await prisma.product.findUnique({
+          where: { id: item.productId },
+          include: { category: true },
+        })
+        if (product && product.stock <= 5) {
+          sendStockAlert({
+            id:       product.id,
+            name:     product.name,
+            stock:    product.stock,
+            category: product.category.name,
+          }).catch(console.error)
+        }
+      }
+    } catch {}
 
     return NextResponse.json(orderWithItems, { status: 201 })
 

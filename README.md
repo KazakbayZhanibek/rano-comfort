@@ -1,6 +1,6 @@
 # RANO Komfort Service — E-commerce Platform
 
-Интернет-магазин бытовой химии для лаборатории RANO Komfort Service (Алматы, Казахстан).
+Интернет-магазин бытовой химии для лаборатории RANO Komfort Service (Шымкент, Казахстан).
 
 ## Стек технологий
 
@@ -249,7 +249,7 @@ npm run db:push
 ## Контакты
 
 **RANO Komfort Service**
-- 📍 Алматы, Казахстан
+- 📍 Шымкент, Казахстан
 - 📞 +7 (777) 123-45-67
 - 💬 WhatsApp/Telegram
 - 📧 info@rano-komfort.kz

@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
@@ -200,6 +202,17 @@ async function poll() {
         const newStatus = parts[2]
 
         try {
+          // Сначала проверяем что заказ существует
+          const existingOrder = await prisma.order.findUnique({
+            where: { id: orderId }
+          })
+
+          if (!existingOrder) {
+            console.log(`Заказ #${orderId} не найден — пропускаем`)
+            await answerCallback(queryId, '❌ Заказ не найден')
+            continue
+          }
+
           const order = await prisma.order.update({
             where: { id: orderId },
             data:  { status: newStatus },

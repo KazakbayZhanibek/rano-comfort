@@ -511,7 +511,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                     fontSize: '0.8rem',
                     color: 'var(--color-text-muted)',
                   }}>
-                    Доставляем по Алматы за 1–3 дня
+                    Доставляем по Шымкенту за 1–3 дня
                   </div>
                 </div>
               </div>

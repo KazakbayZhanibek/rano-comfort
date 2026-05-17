@@ -167,7 +167,7 @@ export function ContactCards() {
                 fontWeight: '600',
               }}
             >
-              Алматы, ул. Абая, 123
+              Шымкент, ул. Абая, 123
             </p>
           </div>
         </div>

@@ -34,7 +34,7 @@ export default function TermsPage() {
           </h2>
           <p>
             RANO Comfort Service предоставляет платформу для покупки бытовой химии и хозяйственных товаров с доставкой
-            на территории Алматы и Казахстана. Компания оставляет право изменять ассортимент, цены и условия обслуживания.
+            на территории Шымкента и Казахстана. Компания оставляет право изменять ассортимент, цены и условия обслуживания.
           </p>
         </section>
 
@@ -184,9 +184,7 @@ export default function TermsPage() {
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <MapPinIcon width={18} height={18} style={{ flexShrink: 0, color: 'var(--color-primary)' }} />
-              Адрес: <strong>Алматы, Казахстан</strong>
-            </div>
-          </p>
+                Адрес: <strong>Шымкент, Казахстан</strong>
         </section>
 
         <section style={{ marginTop: '40px', paddingTop: '20px', borderTop: '1px solid var(--border)' }}>

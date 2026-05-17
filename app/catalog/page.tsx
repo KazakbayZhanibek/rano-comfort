@@ -5,11 +5,11 @@ import ProductGrid from '@/components/catalog/ProductGrid'
 
 export const metadata: Metadata = {
   title: 'Каталог товаров',
-  description: 'Весь ассортимент бытовой химии RANO Comfort Service. Средства для посуды, стирки, пола, ванной. Доставка по Алматы.',
-  keywords: ['каталог', 'бытовая химия', 'Алматы', 'купить онлайн', 'средства уборки'],
+  description: 'Весь ассортимент бытовой химии RANO Comfort Service. Средства для посуды, стирки, пола, ванной. Доставка по Шымкенту.',
+  keywords: ['каталог', 'бытовая химия', 'Шымкент', 'купить онлайн', 'средства уборки'],
   openGraph: {
     title: 'Каталог товаров — RANO Comfort Service',
-    description: 'Весь ассортимент бытовой химии RANO Comfort Service. Доставка по Алматы.',
+    description: 'Весь ассортимент бытовой химии RANO Comfort Service. Доставка по Шымкенту.',
     type: 'website',
   },
 }

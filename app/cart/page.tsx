@@ -253,6 +253,12 @@ export default function CartPage() {
             grid-template-columns: 1fr !important;
           }
         }
+        @media (max-width: 480px) {
+          .cart-item {
+            padding: 0.875rem !important;
+            gap: 0.75rem !important;
+          }
+        }
       `}</style>
     </>
   )
@@ -272,11 +278,11 @@ function CartItem({
   return (
     <div style={{
       display: 'grid',
-      gridTemplateColumns: '100px 1fr auto',
-      gap: '1.5rem',
-      padding: '1.5rem',
+      gridTemplateColumns: '80px 1fr',
+      gap: '1rem',
+      padding: '1rem',
       borderBottom: '1px solid var(--color-border)',
-      alignItems: 'center',
+      alignItems: 'start',
     }}
       className="cart-item"
     >
@@ -309,144 +315,63 @@ function CartItem({
         <Link href={`/catalog/${item.name.toLowerCase().replace(/\s+/g, '-')}`}>
           <h3 style={{
             fontFamily: 'var(--font-heading)',
-            fontSize: '0.95rem',
+            fontSize: '0.9rem',
             fontWeight: 700,
-            marginBottom: '0.4rem',
+            marginBottom: '0.25rem',
             color: 'var(--color-text)',
-            transition: 'color var(--transition)',
-            cursor: 'pointer',
-          }}
-            onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-primary)')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-text)')}
-          >
+          }}>
             {item.name}
           </h3>
         </Link>
 
         {item.volume && (
-          <p style={{
-            fontSize: '0.8rem',
-            color: 'var(--color-text-muted)',
-            marginBottom: '0.75rem',
-          }}>
+          <p style={{ fontSize: '0.78rem', color: 'var(--color-text-muted)', marginBottom: '0.5rem' }}>
             {item.volume}
           </p>
         )}
 
-        <div style={{
-          fontSize: '0.9rem',
-          fontWeight: 700,
-          color: 'var(--color-primary)',
-        } as React.CSSProperties}>
+        <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--color-primary)', marginBottom: '0.75rem' }}>
           {item.price.toLocaleString('ru-KZ')} ₸
         </div>
-      </div>
 
-      {/* Управление количеством и удаление */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '1rem',
-      }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          borderRadius: 'var(--radius-md)',
-          border: '1px solid var(--color-border)',
-          overflow: 'hidden',
-        }}>
-          <button
-            onClick={() => onQuantityChange(Math.max(1, item.quantity - 1))}
-            style={{
-              width: 32,
-              height: 32,
-              background: 'transparent',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'var(--color-text-muted)',
-              fontSize: '1.1rem',
-            }}
-          >
-            −
-          </button>
-          <input
-            type="number"
-            min={1}
-            value={item.quantity}
-            onChange={e => onQuantityChange(Math.max(1, parseInt(e.target.value) || 1))}
-            style={{
-              width: 40,
-              height: 32,
-              border: 'none',
-              textAlign: 'center',
-              background: 'transparent',
-              fontSize: '0.9rem',
-              fontWeight: 600,
-            }}
-          />
-          <button
-            onClick={() => onQuantityChange(item.quantity + 1)}
-            style={{
-              width: 32,
-              height: 32,
-              background: 'transparent',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'var(--color-text-muted)',
-              fontSize: '1.1rem',
-            }}
-          >
-            +
-          </button>
-        </div>
-
-        <div style={{
-          fontSize: '0.9rem',
-          fontWeight: 700,
-          color: 'var(--color-text)',
-          minWidth: '70px',
-          textAlign: 'right',
-        }}>
-          {(item.price * item.quantity).toLocaleString('ru-KZ')} ₸
-        </div>
-
-        <button
-          onClick={onRemove}
-          style={{
-            width: 36,
-            height: 36,
-            borderRadius: '50%',
-            background: 'transparent',
+        {/* Управление количеством */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <div style={{
+            display: 'flex', alignItems: 'center',
+            borderRadius: 'var(--radius-md)',
             border: '1px solid var(--color-border)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            color: 'var(--color-text-muted)',
-            transition: 'all var(--transition)',
+            overflow: 'hidden',
+          }}>
+            <button onClick={() => onQuantityChange(Math.max(1, item.quantity - 1))}
+              style={{ width: 30, height: 30, background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '1rem', color: 'var(--color-text-muted)' }}>
+              −
+            </button>
+            <input type="number" min={1} value={item.quantity}
+              onChange={e => onQuantityChange(Math.max(1, parseInt(e.target.value) || 1))}
+              style={{ width: 36, height: 30, border: 'none', textAlign: 'center', background: 'transparent', fontSize: '0.875rem', fontWeight: 600 }}
+            />
+            <button onClick={() => onQuantityChange(item.quantity + 1)}
+              style={{ width: 30, height: 30, background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '1rem', color: 'var(--color-text-muted)' }}>
+              +
+            </button>
+          </div>
+
+          <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--color-text)' }}>
+            {(item.price * item.quantity).toLocaleString('ru-KZ')} ₸
+          </div>
+
+          <button onClick={onRemove} style={{
+            width: 32, height: 32, borderRadius: '50%',
+            background: 'transparent', border: '1px solid var(--color-border)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer', color: 'var(--color-text-muted)',
           }}
-          onMouseEnter={e => {
-            const el = e.currentTarget as HTMLButtonElement
-            el.style.background = '#FEE2E2'
-            el.style.borderColor = '#DC2626'
-            el.style.color = '#DC2626'
-          }}
-          onMouseLeave={e => {
-            const el = e.currentTarget as HTMLButtonElement
-            el.style.background = 'transparent'
-            el.style.borderColor = 'var(--color-border)'
-            el.style.color = 'var(--color-text-muted)'
-          }}
-          title="Удалить из корзины"
-        >
-          <TrashIcon style={{ width: 18, height: 18 }} />
-        </button>
+            onMouseEnter={e => { const el = e.currentTarget as HTMLButtonElement; el.style.background = '#FEE2E2'; el.style.color = '#DC2626' }}
+            onMouseLeave={e => { const el = e.currentTarget as HTMLButtonElement; el.style.background = 'transparent'; el.style.color = 'var(--color-text-muted)' }}
+          >
+            <TrashIcon style={{ width: 16, height: 16 }} />
+          </button>
+        </div>
       </div>
     </div>
   )

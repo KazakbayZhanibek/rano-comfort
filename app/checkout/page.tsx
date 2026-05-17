@@ -280,7 +280,7 @@ async function handleSubmit(e: React.FormEvent) {
                       fontSize: '0.85rem',
                       color: 'var(--color-text-muted)',
                     }}>
-                      1–3 дня по Алматы
+                      1–3 дня по Шымкенту
                     </div>
                   </div>
                 </label>

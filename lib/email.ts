@@ -1,15 +1,8 @@
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 
-// Настройка SMTP - используй переменные окружения
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: process.env.SMTP_SECURE === 'true', // true для 465, false для 587
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-})
+const resend = new Resend(process.env.RESEND_API_KEY)
+
+const FROM_EMAIL = process.env.SMTP_FROM || 'onboarding@resend.dev'
 
 export async function sendOrderNotification(order: {
   id: number
@@ -142,7 +135,7 @@ export async function sendOrderNotification(order: {
 
           <div class="footer">
             <p>RANO Komfort Service | Лаборатория бытовой химии</p>
-            <p>Адрес: ул. Абая, 123, офис 45, Алматы</p>
+            <p>Адрес: ул. Абая, 123, офис 45, Шымкент</p>
             <p>Телефон: +7 (747) 905-32-47</p>
           </div>
         </div>
@@ -151,8 +144,8 @@ export async function sendOrderNotification(order: {
   `
 
   try {
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM || process.env.SMTP_USER,
+    await resend.emails.send({
+      from: FROM_EMAIL,
       to: order.email,
       subject: `✨ Ваш заказ #${order.id} принят | RANO Comfort`,
       html: htmlContent,
@@ -227,7 +220,7 @@ export async function sendStatusUpdateEmail(order: {
 
           <div class="footer">
             <p>RANO Comfort Service | Лаборатория бытовой химии</p>
-            <p>Адрес: ул. Абая, 123, офис 45, Алматы</p>
+            <p>Адрес: ул. Абая, 123, офис 45, Шымкент</p>
             <p>Телефон: +7 (747) 905-32-47</p>
           </div>
         </div>
@@ -236,8 +229,8 @@ export async function sendStatusUpdateEmail(order: {
   `
 
   try {
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM || process.env.SMTP_USER,
+    await resend.emails.send({
+      from: FROM_EMAIL,
       to: order.email,
       subject: `${status.emoji} Заказ #${order.id}: ${status.text}`,
       html: htmlContent,

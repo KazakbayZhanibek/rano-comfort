@@ -288,8 +288,8 @@ Content-Type: application/json
 {
   "userId": 1,
   "label": "Работа",
-  "fullAddress": "Алматы, пр. Аль-Фараби 77",
-  "city": "Алматы",
+  "fullAddress": "Шымкент, пр. Аль-Фараби 77",
+  "city": "Шымкент",
   "street": "пр. Аль-Фараби",
   "building": "77",
   "apartment": null,

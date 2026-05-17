@@ -35,6 +35,10 @@ export async function POST(req: NextRequest) {
 
     const { password } = await req.json()
 
+    console.log('ADMIN_SECRET from env:', process.env.ADMIN_SECRET)
+    console.log('Password received:', password)
+    console.log('Match:', password === process.env.ADMIN_SECRET)
+
     if (!password) {
       return NextResponse.json({ error: 'Пароль не указан' }, { status: 400 })
     }

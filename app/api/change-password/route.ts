@@ -24,11 +24,19 @@ export async function POST(request: NextRequest) {
     }
 
     const session = await getServerSession(authOptions)
+    console.log('🔍 Change-password session:', session?.user?.email)
+    
     if (!session?.user?.email) {
+      console.error('❌ No session found')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const body = await request.json()
+    console.log('Body received:', { 
+      currentPassword: body.currentPassword?.length, 
+      newPassword: body.newPassword?.length,
+      confirmPassword: body.confirmPassword?.length 
+    })
     const { currentPassword, newPassword, confirmPassword } = body
 
     if (!currentPassword || !newPassword || !confirmPassword) {
