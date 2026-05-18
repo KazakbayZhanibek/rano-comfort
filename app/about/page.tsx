@@ -176,14 +176,13 @@ export default function AboutPage() {
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
+            gridTemplateColumns: 'repeat(3, 1fr)',
             gap: '1.5rem',
           }} className="team-grid">
             {[
-              { name: 'Алексей К.',  role: 'Основатель & Химик', initials: 'АК' },
-              { name: 'Мария С.',    role: 'Технолог',            initials: 'МС' },
-              { name: 'Азамат М.',   role: 'Логистика',           initials: 'АМ' },
-              { name: 'Айгерим Т.', role: 'Менеджер',            initials: 'АТ' },
+              { name: 'Шухрат Б. и Рано М.', role: 'Основатели', initials: 'ШР' },
+              { name: 'Дильфуза Б.', role: 'Владелец шымкентского филиала', initials: 'ДБ' },
+              { name: 'Жанибек К.', role: 'Главный программист', initials: 'ЖК' },
             ].map((person, i) => (
               <div key={i} style={{
                 background: 'var(--color-section-bg)',

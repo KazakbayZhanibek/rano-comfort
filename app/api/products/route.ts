@@ -9,6 +9,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const categorySlug = searchParams.get('category')
     const search       = searchParams.get('search')
+    const bestseller   = searchParams.get('bestseller')
     const sort         = searchParams.get('sort') || 'newest'
 
     let where: any = {}
@@ -22,6 +23,10 @@ export async function GET(request: Request) {
         { name:        { contains: search, mode: 'insensitive' } },
         { description: { contains: search, mode: 'insensitive' } },
       ]
+    }
+
+    if (bestseller === 'true') {
+      where.isBestseller = true
     }
 
     let orderBy: any = { createdAt: 'desc' }

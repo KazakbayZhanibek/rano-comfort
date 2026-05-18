@@ -1,12 +1,33 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
+interface Category {
+  id: number
+  name: string
+  slug: string
+}
+
 export default function Footer() {
   const pathname = usePathname()
   const year = new Date().getFullYear()
+  const [categories, setCategories] = useState<Category[]>([])
+
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const res = await fetch('/api/categories')
+        const data = await res.json()
+        setCategories(data)
+      } catch (error) {
+        console.error('Ошибка загрузки категорий:', error)
+      }
+    }
+    loadCategories()
+  }, [])
 
   // Скрыть footer в админке
   if (pathname?.startsWith('/admin')) {
@@ -81,20 +102,13 @@ export default function Footer() {
               Каталог
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-              {[
-                { href: '/catalog?category=dishwashing',   label: 'Для посуды'  },
-                { href: '/catalog?category=laundry',       label: 'Для стирки'  },
-                { href: '/catalog?category=floor',         label: 'Для пола'    },
-                { href: '/catalog?category=bathroom',      label: 'Для ванной'  },
-                { href: '/catalog?category=glass',         label: 'Для стёкол'  },
-                { href: '/catalog?category=air-freshener', label: 'Освежители'  },
-              ].map(({ href, label }) => (
-                <Link key={href} href={href}
+              {categories.map(cat => (
+                <Link key={cat.slug} href={`/catalog?category=${cat.slug}`}
                   style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.65)', textDecoration: 'none', transition: 'color 0.2s ease' }}
                   onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
                   onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.65)')}
                 >
-                  {label}
+                  {cat.name}
                 </Link>
               ))}
             </div>

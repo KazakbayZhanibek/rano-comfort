@@ -72,6 +72,35 @@ export async function POST(request: Request) {
       items: JSON.parse(order.items)
     }
 
+    // Уменьшаем остаток товаров
+    try {
+      const orderItems = typeof order.items === 'string'
+        ? JSON.parse(order.items)
+        : order.items
+
+      for (const item of orderItems) {
+        if (item.productId) {
+          const product = await prisma.product.update({
+            where: { id: item.productId },
+            data: { stock: { decrement: item.quantity } },
+            include: { category: true },
+          })
+
+          // Уведомление если остаток низкий
+          if (product.stock <= 5) {
+            sendStockAlert({
+              id:       product.id,
+              name:     product.name,
+              stock:    product.stock,
+              category: product.category.name,
+            }).catch(console.error)
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Stock update error:', err)
+    }
+
     // ← добавь эти строки после создания заказа
     sendTelegramNotification({
       id:      order.id,

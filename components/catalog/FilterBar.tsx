@@ -1,18 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
-
-const categories = [
-  { slug: 'all',           name: 'Все товары'  },
-  { slug: 'dishwashing',   name: 'Для посуды'  },
-  { slug: 'laundry',       name: 'Для стирки'  },
-  { slug: 'floor',         name: 'Для пола'    },
-  { slug: 'bathroom',      name: 'Для ванной'  },
-  { slug: 'glass',         name: 'Для стёкол'  },
-  { slug: 'air-freshener', name: 'Освежители'  },
-]
 
 const sortOptions = [
   { value: 'popular',    label: 'По популярности'              },
@@ -21,15 +11,65 @@ const sortOptions = [
   { value: 'price-desc', label: 'Цена: от большей к меньшей'  },
 ]
 
+interface Category {
+  id: number
+  name: string
+  slug: string
+  icon?: string | null
+}
+
 export default function FilterBar() {
   const router       = useRouter()
   const searchParams = useSearchParams()
   const [showCategories, setShowCategories] = useState(false)
+  const [categories, setCategories] = useState<Category[]>([
+    { id: 0, slug: 'all', name: 'Все товары' }
+  ])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const res = await fetch('/api/categories')
+        const data = await res.json()
+        setCategories([
+          { id: 0, slug: 'all', name: 'Все товары' },
+          ...data.map((cat: Category) => ({
+            id: cat.id,
+            slug: cat.slug,
+            name: cat.name,
+            icon: cat.icon,
+          }))
+        ])
+      } catch (error) {
+        console.error('Ошибка загрузки категорий:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    loadCategories()
+  }, [])
 
   const currentCategory = searchParams.get('category') || 'all'
   const currentSort     = searchParams.get('sort')     || 'popular'
   const currentSearch   = searchParams.get('search')   || ''
   const categoryName = categories.find(c => c.slug === currentCategory)?.name || 'Все товары'
+
+  if (loading) {
+    return (
+      <div style={{
+        background: '#fff',
+        borderBottom: '1px solid var(--color-border)',
+        padding: '1.25rem 0',
+        marginBottom: '2rem',
+      }}>
+        <div className="container">
+          <div style={{ height: '40px', background: 'var(--color-section-bg)', borderRadius: 'var(--radius-md)', marginBottom: '1rem' }} />
+        </div>
+      </div>
+    )
+  }
 
   function handleCategoryChange(slug: string) {
     const params = new URLSearchParams(searchParams)
